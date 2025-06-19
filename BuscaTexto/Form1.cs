@@ -22,16 +22,35 @@ namespace BuscaTexto {
             // TODO
             // Complete com seu nome e código de matrícula
             MessageBox.Show(this,
-               "Busca em Texto - 2025/1\n\nDesenvolvido por:\n79999999 - NOME DO ALUNO\nProf. Virgílio Borges de Oliveira\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
+               "Busca em Texto - 2025/1\n\nDesenvolvido por: Rian Nascimento Alves e Rafael Augusto\n72301015 e 7230????\nProf. Virgílio Borges de Oliveira\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
                "Sobre o trabalho...",
                MessageBoxButtons.OK,
                MessageBoxIcon.Information);
         }
 
-        private void abrirToolStripMenuItem_Click(object sender, EventArgs e) {
-            // TODO
-            // Caixa de diálogo de abrir arquivo com filtro para extensão txt e rtf
+        private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Arquivos de Texto (*.txt)|*.txt|Rich Text Format (*.rtf)|*.rtf";
+                openFileDialog.Title = "Abrir arquivo";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string caminhoArquivo = openFileDialog.FileName;
+                  
+                    if (System.IO.Path.GetExtension(caminhoArquivo).ToLower() == ".rtf")
+                    {
+                        texto.Rtf = System.IO.File.ReadAllText(caminhoArquivo);
+                    }
+                    else
+                    {
+                        texto.Text = System.IO.File.ReadAllText(caminhoArquivo);
+                    }
+                }
+            }
         }
+
 
         private void sairToolStripMenuItem_Click(object sender, EventArgs e) {
             Application.Exit();
