@@ -30,6 +30,13 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.sairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pesquisarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.forcaBrutaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.forcaBrutaToolStripMenuItem.Name = "forcaBrutaToolStripMenuItem";
+            this.forcaBrutaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.forcaBrutaToolStripMenuItem.Text = "Força Bruta";
+            this.forcaBrutaToolStripMenuItem.Click += new System.EventHandler(this.forcaBrutaToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.forcaBrutaToolStripMenuItem);
+
             this.ajudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sobreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.texto = new System.Windows.Forms.RichTextBox();
@@ -144,6 +151,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem sairToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pesquisarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem forcaBrutaToolStripMenuItem;
+
+
         private System.Windows.Forms.RichTextBox texto;
         private System.Windows.Forms.ToolStripMenuItem ajudaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sobreToolStripMenuItem;
