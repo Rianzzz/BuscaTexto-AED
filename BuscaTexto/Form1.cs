@@ -42,6 +42,7 @@ namespace BuscaTexto {
             string conteudo = texto.Text; // Texto a ser pesquisado
             int inicio = 0; // Posição inicial da busca
             int idx; // Índice da ocorrência encontrada
+            bool encontrou = false; // Controla se encontrou alguma ocorrência
 
             Random rand = new Random(); // Gerador de cores aleatórias
 
@@ -51,6 +52,8 @@ namespace BuscaTexto {
                 idx = BuscaForcaBruta.forcaBruta(padrao, conteudo.Substring(inicio));
                 if (idx == -1)
                     break;
+
+                encontrou = true; // Encontrou pelo menos uma ocorrência
 
                 // Destaca a ocorrência encontrada com uma cor aleatória
                 Color corAleatoria = Color.FromArgb(
@@ -66,14 +69,26 @@ namespace BuscaTexto {
             }
 
             texto.SelectionLength = 0; // Remove seleção ao final
+
+            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
+            if (!encontrou)
+            {
+                MessageBox.Show(this,
+                    "O termo pesquisado não foi encontrado no texto.",
+                    "Nenhuma ocorrência encontrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // Evento do menu "Rabin-Karp" - busca e destaca ocorrências usando o algoritmo Rabin-Karp
         private void rabinKarpToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
 
+            // Solicita ao usuário o termo de busca
             string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Rabin-Karp", "");
 
             if (string.IsNullOrEmpty(padrao))
@@ -82,15 +97,19 @@ namespace BuscaTexto {
             string conteudo = texto.Text;
             int inicio = 0;
             int idx;
+            bool encontrou = false; // Controla se encontrou alguma ocorrência
 
             Random rand = new Random();
 
+            // Busca todas as ocorrências do padrão no texto
             while (inicio < conteudo.Length)
             {
                 idx = BuscaRabinKarp.RKSearch(padrao, conteudo.Substring(inicio));
                 if (idx == -1)
                     break;
+                encontrou = true; // Encontrou pelo menos uma ocorrência
 
+                // Destaca a ocorrência encontrada com uma cor aleatória
                 Color corAleatoria = Color.FromArgb(
                     255,
                     rand.Next(256),
@@ -104,14 +123,26 @@ namespace BuscaTexto {
             }
 
             texto.SelectionLength = 0;
+
+            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
+            if (!encontrou)
+            {
+                MessageBox.Show(this,
+                    "O termo pesquisado não foi encontrado no texto.",
+                    "Nenhuma ocorrência encontrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // Evento do menu "KMP" - busca e destaca ocorrências usando o algoritmo KMP
         private void kmpToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
 
+            // Solicita ao usuário o termo de busca
             string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "KMP", "");
 
             if (string.IsNullOrEmpty(padrao))
@@ -120,15 +151,19 @@ namespace BuscaTexto {
             string conteudo = texto.Text;
             int inicio = 0;
             int idx;
+            bool encontrou = false; // Controla se encontrou alguma ocorrência
 
             Random rand = new Random();
 
+            // Busca todas as ocorrências do padrão no texto
             while (inicio < conteudo.Length)
             {
                 idx = BuscaKMP.KMPSearch(padrao, conteudo.Substring(inicio));
                 if (idx == -1)
                     break;
+                encontrou = true; // Encontrou pelo menos uma ocorrência
 
+                // Destaca a ocorrência encontrada com uma cor aleatória
                 Color corAleatoria = Color.FromArgb(
                     255,
                     rand.Next(256),
@@ -142,14 +177,26 @@ namespace BuscaTexto {
             }
 
             texto.SelectionLength = 0;
+
+            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
+            if (!encontrou)
+            {
+                MessageBox.Show(this,
+                    "O termo pesquisado não foi encontrado no texto.",
+                    "Nenhuma ocorrência encontrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // Evento do menu "Boyer-Moore" - busca e destaca ocorrências usando o algoritmo Boyer-Moore
         private void boyerMooreToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
 
+            // Solicita ao usuário o termo de busca
             string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Boyer-Moore", "");
 
             if (string.IsNullOrEmpty(padrao))
@@ -158,15 +205,19 @@ namespace BuscaTexto {
             string conteudo = texto.Text;
             int inicio = 0;
             int idx;
+            bool encontrou = false; // Controla se encontrou alguma ocorrência
 
             Random rand = new Random();
 
+            // Busca todas as ocorrências do padrão no texto
             while (inicio < conteudo.Length)
             {
                 idx = BuscaBoyerMoore.BMSearch(padrao, conteudo.Substring(inicio));
                 if (idx == -1)
                     break;
+                encontrou = true; // Encontrou pelo menos uma ocorrência
 
+                // Destaca a ocorrência encontrada com uma cor aleatória
                 Color corAleatoria = Color.FromArgb(
                     255,
                     rand.Next(256),
@@ -180,6 +231,16 @@ namespace BuscaTexto {
             }
 
             texto.SelectionLength = 0;
+
+            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
+            if (!encontrou)
+            {
+                MessageBox.Show(this,
+                    "O termo pesquisado não foi encontrado no texto.",
+                    "Nenhuma ocorrência encontrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // Evento do menu "Sobre" - exibe informações sobre o trabalho
@@ -187,7 +248,7 @@ namespace BuscaTexto {
         {
             // TODO: Complete com seu nome e código de matrícula
             MessageBox.Show(this,
-               "Busca em Texto - 2025/1\n\nDesenvolvido por: Rian Nascimento Alves e Rafael Augusto\n72301015 e 7230????\nProf. Virgílio Borges de Oliveira\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
+               "Busca em Texto - 2025/1\n\nDesenvolvido por: Rian Nascimento Alves e Rafael Augusto\n72301015 e 7230????\nProf. Roselene Henrique Pereira Costa\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
                "Sobre o trabalho...",
                MessageBoxButtons.OK,
                MessageBoxIcon.Information);
