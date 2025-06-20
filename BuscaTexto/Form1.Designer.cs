@@ -30,19 +30,10 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.sairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pesquisarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.forcaBrutaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.forcaBrutaToolStripMenuItem.Name = "forcaBrutaToolStripMenuItem";
-            this.forcaBrutaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.forcaBrutaToolStripMenuItem.Text = "Força Bruta";
-            this.forcaBrutaToolStripMenuItem.Click += new System.EventHandler(this.forcaBrutaToolStripMenuItem_Click);
-            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.forcaBrutaToolStripMenuItem);   
+            this.forcaBrutaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();              
             this.rabinKarpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rabinKarpToolStripMenuItem.Name = "rabinKarpToolStripMenuItem";
-            this.rabinKarpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rabinKarpToolStripMenuItem.Text = "Rabin-Karp";
-            this.rabinKarpToolStripMenuItem.Click += new System.EventHandler(this.rabinKarpToolStripMenuItem_Click);
-            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.rabinKarpToolStripMenuItem);
-
+            this.kmpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boyerMooreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 
 
             this.ajudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,6 +96,26 @@
             this.pesquisarToolStripMenuItem.Name = "pesquisarToolStripMenuItem";
             this.pesquisarToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.pesquisarToolStripMenuItem.Text = "&Pesquisar";
+            this.forcaBrutaToolStripMenuItem.Name = "forcaBrutaToolStripMenuItem";
+            this.forcaBrutaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.forcaBrutaToolStripMenuItem.Text = "Força Bruta";
+            this.forcaBrutaToolStripMenuItem.Click += new System.EventHandler(this.forcaBrutaToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.forcaBrutaToolStripMenuItem);
+            this.rabinKarpToolStripMenuItem.Name = "rabinKarpToolStripMenuItem";
+            this.rabinKarpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rabinKarpToolStripMenuItem.Text = "Rabin-Karp";
+            this.rabinKarpToolStripMenuItem.Click += new System.EventHandler(this.rabinKarpToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.rabinKarpToolStripMenuItem);
+            this.kmpToolStripMenuItem.Name = "kmpToolStripMenuItem";
+            this.kmpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kmpToolStripMenuItem.Text = "KMP";
+            this.kmpToolStripMenuItem.Click += new System.EventHandler(this.kmpToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.kmpToolStripMenuItem);
+            this.boyerMooreToolStripMenuItem.Name = "boyerMooreToolStripMenuItem";
+            this.boyerMooreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.boyerMooreToolStripMenuItem.Text = "Boyer-Moore";
+            this.boyerMooreToolStripMenuItem.Click += new System.EventHandler(this.boyerMooreToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.boyerMooreToolStripMenuItem);
             // 
             // ajudaToolStripMenuItem
             // 
@@ -161,8 +172,8 @@
         private System.Windows.Forms.ToolStripMenuItem pesquisarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forcaBrutaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rabinKarpToolStripMenuItem;
-
-
+        private System.Windows.Forms.ToolStripMenuItem kmpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem boyerMooreToolStripMenuItem;
         private System.Windows.Forms.RichTextBox texto;
         private System.Windows.Forms.ToolStripMenuItem ajudaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sobreToolStripMenuItem;

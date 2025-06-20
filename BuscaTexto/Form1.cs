@@ -98,6 +98,80 @@ namespace BuscaTexto {
             texto.SelectionLength = 0;
         }
 
+        private void kmpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            texto.SelectAll();
+            texto.SelectionBackColor = Color.White;
+
+            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "KMP", "");
+
+            if (string.IsNullOrEmpty(padrao))
+                return;
+
+            string conteudo = texto.Text;
+            int inicio = 0;
+            int idx;
+
+            Random rand = new Random();
+
+            while (inicio < conteudo.Length)
+            {
+                idx = BuscaKMP.KMPSearch(padrao, conteudo.Substring(inicio));
+                if (idx == -1)
+                    break;
+
+                Color corAleatoria = Color.FromArgb(
+                    255,
+                    rand.Next(256),
+                    rand.Next(256),
+                    rand.Next(256)
+                );
+
+                texto.Select(inicio + idx, padrao.Length);
+                texto.SelectionBackColor = corAleatoria;
+                inicio += idx + padrao.Length;
+            }
+
+            texto.SelectionLength = 0;
+        }
+
+        private void boyerMooreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            texto.SelectAll();
+            texto.SelectionBackColor = Color.White;
+
+            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Boyer-Moore", "");
+
+            if (string.IsNullOrEmpty(padrao))
+                return;
+
+            string conteudo = texto.Text;
+            int inicio = 0;
+            int idx;
+
+            Random rand = new Random();
+
+            while (inicio < conteudo.Length)
+            {
+                idx = BuscaBoyerMoore.BMSearch(padrao, conteudo.Substring(inicio));
+                if (idx == -1)
+                    break;
+
+                Color corAleatoria = Color.FromArgb(
+                    255,
+                    rand.Next(256),
+                    rand.Next(256),
+                    rand.Next(256)
+                );
+
+                texto.Select(inicio + idx, padrao.Length);
+                texto.SelectionBackColor = corAleatoria;
+                inicio += idx + padrao.Length;
+            }
+
+            texto.SelectionLength = 0;
+        }
+
         private void sobreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO
