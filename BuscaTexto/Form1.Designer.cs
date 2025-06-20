@@ -35,7 +35,15 @@
             this.forcaBrutaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.forcaBrutaToolStripMenuItem.Text = "Força Bruta";
             this.forcaBrutaToolStripMenuItem.Click += new System.EventHandler(this.forcaBrutaToolStripMenuItem_Click);
-            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.forcaBrutaToolStripMenuItem);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.forcaBrutaToolStripMenuItem);   
+            this.rabinKarpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rabinKarpToolStripMenuItem.Name = "rabinKarpToolStripMenuItem";
+            this.rabinKarpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rabinKarpToolStripMenuItem.Text = "Rabin-Karp";
+            this.rabinKarpToolStripMenuItem.Click += new System.EventHandler(this.rabinKarpToolStripMenuItem_Click);
+            this.pesquisarToolStripMenuItem.DropDownItems.Add(this.rabinKarpToolStripMenuItem);
+
+
 
             this.ajudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sobreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -152,11 +160,13 @@
         private System.Windows.Forms.ToolStripMenuItem sairToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pesquisarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forcaBrutaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rabinKarpToolStripMenuItem;
 
 
         private System.Windows.Forms.RichTextBox texto;
         private System.Windows.Forms.ToolStripMenuItem ajudaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sobreToolStripMenuItem;
+        
     }
 }
 
