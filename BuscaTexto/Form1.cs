@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 
-namespace BuscaTexto {
+namespace BuscaTexto
+{
     // Classe principal do formulário da aplicação
     public partial class Form1 : Form
     {
@@ -25,236 +26,159 @@ namespace BuscaTexto {
             texto.Text = "";
         }
 
-        // Evento do menu "Força Bruta" - busca e destaca ocorrências usando o algoritmo de força bruta
+        // Método auxiliar para obter dados de busca do usuário
+        private (string padrao, string substituicao, bool caseSensitive, bool substituir) ObterDadosBusca(string titulo)
+        {
+            using (var form = new FormBusca(titulo))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    return (form.Padrao, form.Substituicao, form.CaseSensitive, form.Substituir);
+                }
+            }
+            return (null, null, true, false);
+        }
+
+        // Método auxiliar para destacar ocorrências
+        private void DestacarOcorrencias(List<int> posicoes, string padrao, string substituicao, bool substituir)
+        {
+            if (posicoes.Count == 0)
+            {
+                MessageBox.Show(this,
+                    "O termo pesquisado não foi encontrado no texto.",
+                    "Nenhuma ocorrência encontrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            if (substituir && !string.IsNullOrEmpty(substituicao))
+            {
+                // Substitui as ocorrências (de trás para frente para não alterar as posições)
+                var posicoesOrdenadas = posicoes.OrderByDescending(p => p).ToList();
+                string textoAtual = texto.Text;
+
+                foreach (int pos in posicoesOrdenadas)
+                {
+                    textoAtual = textoAtual.Remove(pos, padrao.Length);
+                    textoAtual = textoAtual.Insert(pos, substituicao);
+                }
+
+                texto.Text = textoAtual;
+
+                MessageBox.Show(this,
+                    $"{posicoes.Count} ocorrência(s) substituída(s) com sucesso!",
+                    "Substituição concluída",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                // Apenas destaca as ocorrências
+                Random rand = new Random();
+
+                foreach (int pos in posicoes)
+                {
+                    Color corAleatoria = Color.FromArgb(
+                        255,
+                        rand.Next(128, 256), // Cores mais claras para melhor legibilidade
+                        rand.Next(128, 256),
+                        rand.Next(128, 256)
+                    );
+
+                    texto.Select(pos, padrao.Length);
+                    texto.SelectionBackColor = corAleatoria;
+                }
+
+                texto.SelectionLength = 0;
+
+                MessageBox.Show(this,
+                    $"{posicoes.Count} ocorrência(s) encontrada(s) e destacada(s)!",
+                    "Busca concluída",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        // Evento do menu "Força Bruta"
         private void forcaBrutaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
+            texto.SelectionLength = 0;
 
-            // Solicita ao usuário o termo de busca
-            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Força Bruta", "");
+            var dados = ObterDadosBusca("Força Bruta");
+            if (dados.padrao == null) return;
 
-            // Se o usuário cancelar ou não digitar nada, sai do método
-            if (string.IsNullOrEmpty(padrao))
-                return;
+            string conteudo = texto.Text;
+            var posicoes = BuscaForcaBruta.forcaBruta(dados.padrao, conteudo, dados.caseSensitive);
 
-            string conteudo = texto.Text; // Texto a ser pesquisado
-            int inicio = 0; // Posição inicial da busca
-            int idx; // Índice da ocorrência encontrada
-            bool encontrou = false; // Controla se encontrou alguma ocorrência
-
-            Random rand = new Random(); // Gerador de cores aleatórias
-
-            // Busca todas as ocorrências do padrão no texto
-            while (inicio < conteudo.Length)
-            {
-                idx = BuscaForcaBruta.forcaBruta(padrao, conteudo.Substring(inicio));
-                if (idx == -1)
-                    break;
-
-                encontrou = true; // Encontrou pelo menos uma ocorrência
-
-                // Destaca a ocorrência encontrada com uma cor aleatória
-                Color corAleatoria = Color.FromArgb(
-                    255,
-                    rand.Next(256),
-                    rand.Next(256),
-                    rand.Next(256)
-                );
-
-                texto.Select(inicio + idx, padrao.Length);
-                texto.SelectionBackColor = corAleatoria;
-                inicio += idx + padrao.Length; // Avança para buscar a próxima ocorrência
-            }
-
-            texto.SelectionLength = 0; // Remove seleção ao final
-
-            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
-            if (!encontrou)
-            {
-                MessageBox.Show(this,
-                    "O termo pesquisado não foi encontrado no texto.",
-                    "Nenhuma ocorrência encontrada",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+            DestacarOcorrencias(posicoes, dados.padrao, dados.substituicao, dados.substituir);
         }
 
-        // Evento do menu "Rabin-Karp" - busca e destaca ocorrências usando o algoritmo Rabin-Karp
+        // Evento do menu "Rabin-Karp"
         private void rabinKarpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
-
-            // Solicita ao usuário o termo de busca
-            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Rabin-Karp", "");
-
-            if (string.IsNullOrEmpty(padrao))
-                return;
-
-            string conteudo = texto.Text;
-            int inicio = 0;
-            int idx;
-            bool encontrou = false; // Controla se encontrou alguma ocorrência
-
-            Random rand = new Random();
-
-            // Busca todas as ocorrências do padrão no texto
-            while (inicio < conteudo.Length)
-            {
-                idx = BuscaRabinKarp.RKSearch(padrao, conteudo.Substring(inicio));
-                if (idx == -1)
-                    break;
-                encontrou = true; // Encontrou pelo menos uma ocorrência
-
-                // Destaca a ocorrência encontrada com uma cor aleatória
-                Color corAleatoria = Color.FromArgb(
-                    255,
-                    rand.Next(256),
-                    rand.Next(256),
-                    rand.Next(256)
-                );
-
-                texto.Select(inicio + idx, padrao.Length);
-                texto.SelectionBackColor = corAleatoria;
-                inicio += idx + padrao.Length;
-            }
-
             texto.SelectionLength = 0;
 
-            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
-            if (!encontrou)
-            {
-                MessageBox.Show(this,
-                    "O termo pesquisado não foi encontrado no texto.",
-                    "Nenhuma ocorrência encontrada",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+            var dados = ObterDadosBusca("Rabin-Karp");
+            if (dados.padrao == null) return;
+
+            string conteudo = texto.Text;
+            var posicoes = BuscaRabinKarp.RKSearchAll(dados.padrao, conteudo, dados.caseSensitive);
+
+            DestacarOcorrencias(posicoes, dados.padrao, dados.substituicao, dados.substituir);
         }
 
-        // Evento do menu "KMP" - busca e destaca ocorrências usando o algoritmo KMP
+        // Evento do menu "KMP"
         private void kmpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
-
-            // Solicita ao usuário o termo de busca
-            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "KMP", "");
-
-            if (string.IsNullOrEmpty(padrao))
-                return;
-
-            string conteudo = texto.Text;
-            int inicio = 0;
-            int idx;
-            bool encontrou = false; // Controla se encontrou alguma ocorrência
-
-            Random rand = new Random();
-
-            // Busca todas as ocorrências do padrão no texto
-            while (inicio < conteudo.Length)
-            {
-                idx = BuscaKMP.KMPSearch(padrao, conteudo.Substring(inicio));
-                if (idx == -1)
-                    break;
-                encontrou = true; // Encontrou pelo menos uma ocorrência
-
-                // Destaca a ocorrência encontrada com uma cor aleatória
-                Color corAleatoria = Color.FromArgb(
-                    255,
-                    rand.Next(256),
-                    rand.Next(256),
-                    rand.Next(256)
-                );
-
-                texto.Select(inicio + idx, padrao.Length);
-                texto.SelectionBackColor = corAleatoria;
-                inicio += idx + padrao.Length;
-            }
-
             texto.SelectionLength = 0;
 
-            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
-            if (!encontrou)
-            {
-                MessageBox.Show(this,
-                    "O termo pesquisado não foi encontrado no texto.",
-                    "Nenhuma ocorrência encontrada",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+            var dados = ObterDadosBusca("KMP");
+            if (dados.padrao == null) return;
+
+            string conteudo = texto.Text;
+            var posicoes = BuscaKMP.KMPSearchAll(dados.padrao, conteudo, dados.caseSensitive);
+
+            DestacarOcorrencias(posicoes, dados.padrao, dados.substituicao, dados.substituir);
         }
 
-        // Evento do menu "Boyer-Moore" - busca e destaca ocorrências usando o algoritmo Boyer-Moore
+        // Evento do menu "Boyer-Moore"
         private void boyerMooreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Limpa destaques anteriores
             texto.SelectAll();
             texto.SelectionBackColor = Color.White;
-
-            // Solicita ao usuário o termo de busca
-            string padrao = Interaction.InputBox("Digite o termo a ser pesquisado:", "Boyer-Moore", "");
-
-            if (string.IsNullOrEmpty(padrao))
-                return;
-
-            string conteudo = texto.Text;
-            int inicio = 0;
-            int idx;
-            bool encontrou = false; // Controla se encontrou alguma ocorrência
-
-            Random rand = new Random();
-
-            // Busca todas as ocorrências do padrão no texto
-            while (inicio < conteudo.Length)
-            {
-                idx = BuscaBoyerMoore.BMSearch(padrao, conteudo.Substring(inicio));
-                if (idx == -1)
-                    break;
-                encontrou = true; // Encontrou pelo menos uma ocorrência
-
-                // Destaca a ocorrência encontrada com uma cor aleatória
-                Color corAleatoria = Color.FromArgb(
-                    255,
-                    rand.Next(256),
-                    rand.Next(256),
-                    rand.Next(256)
-                );
-
-                texto.Select(inicio + idx, padrao.Length);
-                texto.SelectionBackColor = corAleatoria;
-                inicio += idx + padrao.Length;
-            }
-
             texto.SelectionLength = 0;
 
-            // Se não encontrou nenhuma ocorrência, mostra mensagem de erro
-            if (!encontrou)
-            {
-                MessageBox.Show(this,
-                    "O termo pesquisado não foi encontrado no texto.",
-                    "Nenhuma ocorrência encontrada",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+            var dados = ObterDadosBusca("Boyer-Moore");
+            if (dados.padrao == null) return;
+
+            string conteudo = texto.Text;
+            var posicoes = BuscaBoyerMoore.BMSearchAll(dados.padrao, conteudo, dados.caseSensitive);
+
+            DestacarOcorrencias(posicoes, dados.padrao, dados.substituicao, dados.substituir);
         }
 
-        // Evento do menu "Sobre" - exibe informações sobre o trabalho
+        // Evento do menu "Sobre"
         private void sobreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Complete com seu nome e código de matrícula
             MessageBox.Show(this,
-               "Busca em Texto - 2025/1\n\nDesenvolvido por: Rian Nascimento Alves e Rafael Augusto\n72301015 e 7230????\nProf. Roselene Henrique Pereira Costa\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
+               "Busca em Texto - 2025/1\n\nDesenvolvido por: Rian Nascimento Alves e Rafael Augusto\n72301015 e 72301350\nProf. Roselene Henrique Pereira Costa\n\nAlgoritmos e Estruturas de Dados II\nFaculdade COTEMIG\nSomente para fins didáticos.",
                "Sobre o trabalho...",
                MessageBoxButtons.OK,
                MessageBoxIcon.Information);
         }
 
-        // Evento do menu "Abrir" - permite abrir arquivos de texto ou RTF
+        // Evento do menu "Abrir"
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -266,20 +190,31 @@ namespace BuscaTexto {
                 {
                     string caminhoArquivo = openFileDialog.FileName;
 
-                    // Se for RTF, carrega como RTF, senão como texto simples
-                    if (System.IO.Path.GetExtension(caminhoArquivo).ToLower() == ".rtf")
+                    try
                     {
-                        texto.Rtf = System.IO.File.ReadAllText(caminhoArquivo);
+                        // Se for RTF, carrega como RTF, senão como texto simples
+                        if (System.IO.Path.GetExtension(caminhoArquivo).ToLower() == ".rtf")
+                        {
+                            texto.LoadFile(caminhoArquivo, RichTextBoxStreamType.RichText);
+                        }
+                        else
+                        {
+                            texto.Text = System.IO.File.ReadAllText(caminhoArquivo, Encoding.UTF8);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        texto.Text = System.IO.File.ReadAllText(caminhoArquivo);
+                        MessageBox.Show(this,
+                            $"Erro ao abrir o arquivo:\n{ex.Message}",
+                            "Erro",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
-        // Evento do menu "Sair" - fecha a aplicação
+        // Evento do menu "Sair"
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
