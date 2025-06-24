@@ -183,13 +183,13 @@ namespace BuscaTexto
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "Arquivos de Texto (*.txt)|*.txt|Rich Text Format (*.rtf)|*.rtf";
+                openFileDialog.Filter = "Arquivos de Texto e RTF (*.txt;*.rtf)|*.txt;*.rtf|Arquivos de Texto (*.txt)|*.txt|Rich Text Format (*.rtf)|*.rtf|Todos os arquivos (*.*)|*.*";
+                openFileDialog.FilterIndex = 1; // Define o primeiro filtro (TXT e RTF) como padrão
                 openFileDialog.Title = "Abrir arquivo";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string caminhoArquivo = openFileDialog.FileName;
-
                     try
                     {
                         // Se for RTF, carrega como RTF, senão como texto simples
